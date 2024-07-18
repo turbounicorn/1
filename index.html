@@ -2,46 +2,48 @@
 #include<sys/time.h>
 #include<time.h>
 #include<sys/resource.h>
-
-void main()
+void sort(int a[],int n)
 {
- struct timeval  tv1, tv2;
-int size,input[50],i; 
- struct rusage r_usage;
-
- printf("Enter the input size \n");
- scanf("%d",&size);
- printf("Enter the array elements \n");
- for(i=0;i<size;i++)
- {
-  scanf("%d",&input[i]);
- }
-gettimeofday(&tv1, NULL);
- selection_sort(input,size);
-gettimeofday(&tv2, NULL);
- printf("\n Sorted array is \n");
- for(i=0;i<size;i++)
- {
-  printf("%d\t",input[i]);
- }
- printf("Time of selection sort = %f microseconds",(double)(tv2.tv_usec-tv1.tv_usec));
- getrusage(RUSAGE_SELF,&r_usage);
- printf("Memory usage: %ld kilobytes\n",r_usage.ru_maxrss);
+    int i,j,min,temp;
+    for(i=0;i<n;i++)
+    {
+        min=i;
+        for(j=i+1;j<n;j++)
+        {
+            if(a[j]<a[min])
+            {
+                min=j;
+            }
+        }
+        temp=a[min];
+        a[min]=a[i];
+        a[i]=temp;
+    }
 }
-
-void selection_sort(int input[100],int n)
+int main()
 {
- int i,j,min,temp;
- for(i=0;i<=n-2;i++)
- {
-  min=i;
-  for(j=i+1;j<=n-1;j++)
-  {
-   if(input[j]<input[min])
-         min=j;
-  }
-    temp=input[min];
-    input[min]=input[i];
-    input[i]=temp;
-  }
+    int i,n;
+    printf("Enter the number of elements: ");
+    scanf("%d",&n);
+    int a[n];
+    printf("Enter the elements into the array : \n");
+    for(i=0;i<n;i++)
+    {
+        scanf("%d",&a[i]);
+    }
+    sort(a,n);
+    printf("\nThe sorted array is : \n");
+    for(i=0;i<n;i++)
+    {
+        printf(" %d ",a[i]);
+    }
+    struct timeval start_time,end_time;
+    gettimeofday(&start_time,NULL);
+    sort(a,n);
+    gettimeofday(&end_time,NULL);
+    printf("\ntime of selection sort= %f microseconds",(double)(end_time.tv_usec-start_time.tv_usec));
+    struct rusage r_usage;
+    getrusage(RUSAGE_SELF,&r_usage);
+    printf("\nMemory usage = %ld kilobytes",r_usage.ru_maxrss);
+    return 0;    
 }
